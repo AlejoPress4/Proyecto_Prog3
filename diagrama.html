@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>diagrama</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+        }
+        #svg-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        #svg-container svg {
+            width: 100%;
+            height: auto;
+        }
+        .interactive {
+            transition: fill 0.3s ease;
+            cursor: pointer;
+        }
+        .interactive:hover {
+            fill: #66e8fd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Diagrama Interactivo</h1>
+        <div id="svg-container"></div>
+        <p id="info">Haz clic en un elemento para seleccionarlo</p>
+    </div>
+
+    <script>
+        // Cargar el SVG
+        fetch('./media/diagrama.svg')
+            .then(response => response.text())
+            .then(svgContent => {
+                document.getElementById('svg-container').innerHTML = svgContent;
+                
+                // Hacer elementos interactivos
+                const svgElement = document.querySelector('#svg-container svg');
+                const interactiveElements = svgElement.querySelectorAll('path, rect, circle, ellipse, line, polyline, polygon');
+                
+                interactiveElements.forEach(element => {
+                    element.classList.add('interactive');
+                    element.addEventListener('click', () => {
+                        // Deseleccionar todos los elementos
+                        interactiveElements.forEach(el => el.style.fill = '');
+                        
+                        // Seleccionar el elemento clicado
+                        element.style.fill = '#ff9900';
+                        
+                        // Actualizar el texto informativo
+                        document.getElementById('info').textContent = `Has seleccionado: ${element.tagName}`;
+                    });
+                });
+            })
+            .catch(error => console.error('Error al cargar el SVG:', error));
+    </script>
+</body>
+</html>
+
